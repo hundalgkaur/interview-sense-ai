@@ -1,0 +1,12 @@
+# build artifacts
+dist
+.vite
+
+# dependencies
+node_modules
+
+# misc
+.DS_Store
+*.local
+.env
+.env.*
