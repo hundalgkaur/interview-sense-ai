@@ -1,40 +1,46 @@
 const mongoose = require("mongoose");
 
 const interviewSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   role: {
     type: String,
-    required: true
+    required: [true, "Role is required"],
+    trim: true,
   },
-
   country: {
     type: String,
-    required: true
+    required: [true, "Country is required"],
+    trim: true,
   },
-
   experience: {
     type: Number,
-    required: true
+    required: [true, "Experience is required"],
   },
-
   questions: [
     {
-      question: String,
-      answer: String,
-      aiFeedback: String,
-      score: Number
-    }
+      question: { type: String, required: true },
+      answer: { type: String },
+      aiFeedback: { type: String },
+      idealAnswer: { type: String },
+      score: { type: Number, default: 0 },
+    },
   ],
-
-  totalScore: {
+  overallScore: {
     type: Number,
-    default: 0
+    default: 0,
   },
-
+  isCompleted: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
-
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model("Interview", interviewSchema);

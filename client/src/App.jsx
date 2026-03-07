@@ -1,30 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './components/layout/Layout';
+import HomePage from './pages/HomePage';
+import InterviewPage from './pages/InterviewPage';
+import DashboardPage from './pages/DashboardPage';
+import HistoryPage from './pages/HistoryPage';
+import ResultsPage from './pages/ResultsPage';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 
 function App() {
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    axios.get('/api')
-      .then(response => {
-        setMessage(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-      });
-  }, []);
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          InterviewSense AI
-        </p>
-        <p>
-          {message}
-        </p>
-      </header>
-    </div>
+    <Router>
+      <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<Layout><LoginPage /></Layout>} />
+          <Route path="/signup" element={<Layout><SignupPage /></Layout>} />
+          <Route path="/interview" element={<Layout><InterviewPage /></Layout>} />
+          <Route path="/dashboard" element={<Layout><DashboardPage /></Layout>} />
+          <Route path="/history" element={<Layout><HistoryPage /></Layout>} />
+          <Route path="/results/:id" element={<Layout><ResultsPage /></Layout>} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
