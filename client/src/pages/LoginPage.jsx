@@ -1,95 +1,83 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, loading, error } = useAuth();
+  const { user, login, error } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await login(email, password);
-      navigate("/dashboard");
-    } catch (err) {
-      console.error("Login failed:", err);
-    }
+    await login(email, password);
   };
 
   return (
-    <div className="max-w-md mx-auto py-20 px-6">
-      <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-blue-50 overflow-hidden border border-gray-100">
-        <div className="p-10 md:p-12">
-          <div className="text-center mb-10">
-            <div className="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-black mx-auto mb-6 shadow-lg shadow-blue-100">
-              IS
-            </div>
-            <h1 className="text-3xl font-black text-gray-900 tracking-tight">Welcome Back</h1>
-            <p className="text-gray-400 font-medium mt-2">Resume your interview preparation</p>
+    <div className="min-h-[80vh] flex items-center justify-center px-6">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+      
+      <div className="premium-card w-full max-w-md p-12 relative z-10 page-transition">
+        <div className="text-center mb-12">
+          <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6 border border-white/5 shadow-2xl">
+            🔑
+          </div>
+          <h1 className="text-4xl font-black text-white tracking-tighter mb-2">Welcome Back</h1>
+          <p className="text-slate-500 font-bold uppercase tracking-widest text-[9px]">Neural Identity Verification</p>
+        </div>
+
+        {error && (
+          <div className="mb-8 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl text-xs font-black uppercase tracking-widest flex items-center gap-3 animate-shake">
+            <span>⚠️</span> {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Access Token (Email)</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@nexus.com"
+              className="liquid-input w-full"
+              required
+            />
           </div>
 
-          {error && (
-            <div className="bg-rose-50 text-rose-600 p-4 rounded-2xl mb-8 text-sm font-bold flex items-center gap-3 border border-rose-100 animate-shake">
-              <span>⚠️</span> {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white outline-none transition-all font-bold text-gray-900"
-                placeholder="name@example.com"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-center px-1">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                  Password
-                </label>
-                <a href="#" className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:opacity-70 transition">Forgot?</a>
-              </div>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white outline-none transition-all font-bold text-gray-900"
-                placeholder="••••••••"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gray-900 text-white font-black py-5 rounded-2xl hover:bg-blue-600 transition-all duration-300 shadow-xl shadow-gray-100 active:scale-95 disabled:opacity-50"
-            >
-              {loading ? (
-                <div className="flex items-center justify-center gap-3">
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  Authenticating...
-                </div>
-              ) : "Sign In →"}
-            </button>
-          </form>
-
-          <div className="mt-10 text-center">
-            <p className="text-sm font-bold text-gray-400">
-              New here?{" "}
-              <Link to="/signup" className="text-blue-600 hover:text-blue-700 transition">
-                Create an account
-              </Link>
-            </p>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Secure Key (Password)</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="liquid-input w-full"
+              required
+            />
           </div>
+
+          <button
+            type="submit"
+            className="w-full glass-button-primary py-5 text-sm uppercase tracking-[0.2em] font-black"
+          >
+            Authorize Access
+          </button>
+        </form>
+
+        <div className="mt-10 text-center">
+          <p className="text-slate-500 font-medium">
+            New to the grid?{" "}
+            <Link to="/signup" className="text-blue-400 font-black hover:text-white transition-colors">
+              Initialize Account
+            </Link>
+          </p>
         </div>
       </div>
     </div>

@@ -18,17 +18,37 @@ const useInterview = () => {
     }
   };
 
-  const startNewInterview = async (role, country, experience) => {
+  const startNewInterview = async (role, country, experience, resumeText = "") => {
     try {
       setLoading(true);
       const { data } = await API.post("/interview/start", {
         role,
         country,
         experience,
+        resumeText,
       });
       return data;
     } catch (err) {
       setError(err.response?.data?.message || "Failed to start interview");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const uploadResume = async (file) => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("resume", file);
+      const { data } = await API.post("/interview/upload-resume", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return data.text;
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to upload resume");
       throw err;
     } finally {
       setLoading(false);
@@ -70,6 +90,7 @@ const useInterview = () => {
     error,
     fetchInterviews,
     startNewInterview,
+    uploadResume,
     getInterviewDetails,
     submitInterviewAnswer,
   };

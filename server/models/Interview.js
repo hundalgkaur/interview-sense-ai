@@ -23,6 +23,8 @@ const interviewSchema = new mongoose.Schema({
   questions: [
     {
       question: { type: String, required: true },
+      type: { type: String, enum: ["theory", "coding"], default: "theory" },
+      initialCode: { type: String, default: "" },
       answer: { type: String },
       aiFeedback: { type: String },
       idealAnswer: { type: String },

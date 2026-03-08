@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
@@ -6,103 +6,91 @@ const SignupPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signup, loading, error } = useAuth();
+  const { user, signup, error } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await signup(name, email, password);
-      navigate("/dashboard");
-    } catch (err) {
-      console.error("Signup failed:", err);
-    }
+    await signup(name, email, password);
   };
 
   return (
-    <div className="max-w-md mx-auto py-20 px-6">
-      <div className="bg-white rounded-[2.5rem] shadow-2xl shadow-blue-50 overflow-hidden border border-gray-100">
-        <div className="p-10 md:p-12">
-          <div className="text-center mb-10">
-            <div className="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-black mx-auto mb-6 shadow-lg shadow-blue-100">
-              IS
-            </div>
-            <h1 className="text-3xl font-black text-gray-900 tracking-tight">Join InterviewSense</h1>
-            <p className="text-gray-400 font-medium mt-2">Start your journey to a dream job</p>
+    <div className="min-h-[80vh] flex items-center justify-center px-6">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+      
+      <div className="premium-card w-full max-w-md p-12 relative z-10 page-transition">
+        <div className="text-center mb-12">
+          <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6 border border-white/5 shadow-2xl">
+            ✨
+          </div>
+          <h1 className="text-4xl font-black text-white tracking-tighter mb-2">Create Identity</h1>
+          <p className="text-slate-500 font-bold uppercase tracking-widest text-[9px]">Initialize Neural Profile</p>
+        </div>
+
+        {error && (
+          <div className="mb-8 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl text-xs font-black uppercase tracking-widest flex items-center gap-3 animate-shake">
+            <span>⚠️</span> {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Full Name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Candidate Name"
+              className="liquid-input w-full"
+              required
+            />
           </div>
 
-          {error && (
-            <div className="bg-rose-50 text-rose-600 p-4 rounded-2xl mb-8 text-sm font-bold flex items-center gap-3 border border-rose-100 animate-shake">
-              <span>⚠️</span> {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">
-                Full Name
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white outline-none transition-all font-bold text-gray-900"
-                placeholder="John Doe"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white outline-none transition-all font-bold text-gray-900"
-                placeholder="name@example.com"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">
-                Password
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-6 py-4 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-blue-600 focus:bg-white outline-none transition-all font-bold text-gray-900"
-                placeholder="•••••••• (6+ characters)"
-                minLength={6}
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gray-900 text-white font-black py-5 rounded-2xl hover:bg-blue-600 transition-all duration-300 shadow-xl shadow-gray-100 active:scale-95 disabled:opacity-50"
-            >
-              {loading ? (
-                <div className="flex items-center justify-center gap-3">
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  Creating Profile...
-                </div>
-              ) : "Create Account →"}
-            </button>
-          </form>
-
-          <div className="mt-10 text-center">
-            <p className="text-sm font-bold text-gray-400">
-              Already a member?{" "}
-              <Link to="/login" className="text-blue-600 hover:text-blue-700 transition">
-                Sign In
-              </Link>
-            </p>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Access Token (Email)</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@nexus.com"
+              className="liquid-input w-full"
+              required
+            />
           </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Secure Key (Password)</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="liquid-input w-full"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full glass-button-primary py-5 text-sm uppercase tracking-[0.2em] font-black"
+          >
+            Finalize Initialization
+          </button>
+        </form>
+
+        <div className="mt-10 text-center">
+          <p className="text-slate-500 font-medium">
+            Already verified?{" "}
+            <Link to="/login" className="text-blue-400 font-black hover:text-white transition-colors">
+              Access Terminal
+            </Link>
+          </p>
         </div>
       </div>
     </div>

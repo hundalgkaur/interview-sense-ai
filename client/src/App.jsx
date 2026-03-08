@@ -8,15 +8,16 @@ import HistoryPage from './pages/HistoryPage';
 import ResultsPage from './pages/ResultsPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import PinterestHome from './pages/PinterestHome';
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
+      <div className="min-h-screen bg-[#050505] text-slate-300 font-sans transition-colors duration-500">
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/pinterest" element={<PinterestHome />} />
           <Route path="/login" element={<Layout><LoginPage /></Layout>} />
-          <Route path="/signup" element={<Layout><SignupPage /></Layout>} />
           <Route path="/interview" element={<Layout><InterviewPage /></Layout>} />
           <Route path="/dashboard" element={<Layout><DashboardPage /></Layout>} />
           <Route path="/history" element={<Layout><HistoryPage /></Layout>} />

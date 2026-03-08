@@ -6,96 +6,92 @@ import Layout from "../components/layout/Layout";
 const HomePage = () => {
   const { user } = useAuth();
 
+  const showcaseItems = [
+    { title: "Neural Synthesis", desc: "Technical evaluation powered by Gemini 1.5 Pro.", icon: "🧠", height: "h-64" },
+    { title: "Verbal Sync", desc: "Continuous voice-to-text practice stream.", icon: "🎙️", height: "h-80" },
+    { title: "Code Lab", desc: "Integrated Monaco IDE with real-time logic analysis.", icon: "💻", height: "h-96" },
+    { title: "Visual Pulse", desc: "Skill radar charts mapping your proficiency.", icon: "📈", height: "h-72" },
+    { title: "Resume Link", desc: "Intelligent PDF skill extraction.", icon: "📄", height: "h-80" },
+    { title: "Logic Flow", desc: "Adaptive follow-up questions that challenge your depth.", icon: "⛓️", height: "h-64" },
+  ];
+
   return (
     <Layout>
-      <div className="relative overflow-hidden">
-        {/* Background blobs */}
-        <div className="absolute top-0 -left-4 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
-        <div className="absolute top-0 -right-4 w-72 h-72 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
+      <div className="relative overflow-hidden min-h-screen animate-in fade-in duration-1000">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-neon-purple/10 rounded-full blur-[120px] animate-glow-pulse"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-neon-cyan/5 rounded-full blur-[120px] animate-glow-pulse delay-1000"></div>
         
-        <div className="max-w-7xl mx-auto px-6 pt-20 pb-24 md:pt-32 md:pb-40 relative">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700 text-sm font-bold mb-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+        <div className="max-w-7xl mx-auto px-6 pt-24 pb-32 relative z-10">
+          <div className="text-center max-w-5xl mx-auto mb-32">
+            <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-white/5 border border-white/10 text-neon-cyan text-[10px] font-black uppercase tracking-[0.3em] mb-12">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-cyan opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-neon-cyan shadow-[0_0_10px_#22D3EE]"></span>
               </span>
-              Trusted by 10,000+ candidates globally
+              Next-Gen Simulation Environment
             </div>
             
-            <h1 className="text-5xl md:text-8xl font-black text-gray-900 mb-8 tracking-tight leading-[0.9]">
-              Master your next <br />
-              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                Technical Interview.
+            <h1 className="text-6xl md:text-9xl font-black text-white mb-10 tracking-tighter leading-[0.85] neon-text-glow">
+              Master the <br />
+              <span className="bg-gradient-to-r from-neon-purple via-neon-cyan to-neon-pink bg-clip-text text-transparent">
+                Neural Screen.
               </span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-gray-500 mb-12 max-w-2xl mx-auto leading-relaxed">
-              Experience AI-powered mock interviews tailored to your role, country, and
-              experience. Get real-time feedback and detailed scoring.
+            <p className="text-xl md:text-2xl text-slate-500 mb-16 max-w-3xl mx-auto leading-relaxed font-medium">
+              High-fidelity AI simulations that evolve based on your expertise. 
+              Real-time analysis, verbal practice, and professional reporting.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-8 justify-center items-center">
               <Link
                 to={user ? "/interview" : "/login"}
-                className="w-full sm:w-auto px-10 py-5 bg-blue-600 text-white font-black text-lg rounded-2xl shadow-[0_20px_50px_rgba(37,_99,_235,_0.3)] hover:shadow-[0_20px_50px_rgba(37,_99,_235,_0.5)] hover:-translate-y-1 transition-all duration-300 active:scale-95"
+                className="btn-neon px-12 py-6 text-base"
               >
-                Start Free Interview →
+                Initiate Simulation →
               </Link>
               {!user && (
                 <Link
                   to="/signup"
-                  className="w-full sm:w-auto px-10 py-5 bg-white text-gray-900 font-bold text-lg rounded-2xl border-2 border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all duration-300"
+                  className="px-12 py-6 bg-white/5 text-white font-black text-base rounded-2xl border border-white/10 backdrop-blur-xl hover:bg-white/10 transition-all duration-500 uppercase tracking-widest shadow-xl"
                 >
-                  Create Account
+                  Create Identity
                 </Link>
               )}
             </div>
-            
-            <div className="mt-20 flex flex-wrap justify-center gap-10 opacity-40 grayscale contrast-125">
-              <span className="text-2xl font-black tracking-tighter">GOOGLE</span>
-              <span className="text-2xl font-black tracking-tighter">META</span>
-              <span className="text-2xl font-black tracking-tighter">AMAZON</span>
-              <span className="text-2xl font-black tracking-tighter">NETFLIX</span>
-              <span className="text-2xl font-black tracking-tighter">APPLE</span>
-            </div>
+          </div>
+
+          <div className="columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8">
+            {showcaseItems.map((item, index) => (
+              <div key={index} className="break-inside-avoid">
+                <div className={`glass-container ${item.height} p-12 group hover:border-neon-purple/30 transition-all duration-700 flex flex-col justify-between relative overflow-hidden`}>
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-neon-purple/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-neon-purple/10 transition-all duration-700"></div>
+                  
+                  <div className="text-4xl mb-8 group-hover:scale-110 transition-transform duration-500 origin-left">
+                    {item.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-3xl font-black text-white mb-4 tracking-tighter group-hover:text-neon-cyan transition-colors">
+                      {item.title}
+                    </h3>
+                    <p className="text-slate-500 font-medium leading-relaxed text-lg">
+                      {item.desc}
+                    </p>
+                  </div>
+                  <div className="mt-10 pt-8 border-t border-white/5 opacity-0 group-hover:opacity-100 transition-all duration-700 transform translate-y-4 group-hover:translate-y-0">
+                    <span className="text-[10px] font-black text-neon-purple uppercase tracking-[0.3em]">Module Validated</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-40 pt-20 border-t border-white/5 flex flex-wrap justify-center gap-16 md:gap-24 opacity-20 grayscale contrast-200 saturate-0">
+            {['GOOGLE', 'META', 'AMAZON', 'NETFLIX', 'APPLE', 'OPENAI'].map(brand => (
+              <span key={brand} className="text-3xl font-black tracking-tighter text-white">{brand}</span>
+            ))}
           </div>
         </div>
-
-        {/* Feature Section */}
-        <section className="bg-white py-24 border-y border-gray-100">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-              <div className="group">
-                <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500">
-                  🚀
-                </div>
-                <h3 className="text-2xl font-bold mb-4 text-gray-900">AI-Generated</h3>
-                <p className="text-gray-500 leading-relaxed">
-                  Dynamic questions powered by Google Gemini tailored specifically to your tech stack and experience level.
-                </p>
-              </div>
-              <div className="group">
-                <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500">
-                  📊
-                </div>
-                <h3 className="text-2xl font-bold mb-4 text-gray-900">Detailed Scoring</h3>
-                <p className="text-gray-500 leading-relaxed">
-                  Receive a professional examiner report for every answer with strengths, weaknesses, and teacher's advice.
-                </p>
-              </div>
-              <div className="group">
-                <div className="w-16 h-16 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all duration-500">
-                  🌍
-                </div>
-                <h3 className="text-2xl font-bold mb-4 text-gray-900">Regional Insights</h3>
-                <p className="text-gray-500 leading-relaxed">
-                  Interviews that reflect the specific technical expectations and cultural nuances of your target country.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
       </div>
     </Layout>
   );

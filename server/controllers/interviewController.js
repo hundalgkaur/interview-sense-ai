@@ -1,19 +1,31 @@
 const Interview = require("../models/Interview");
-const { generateQuestions, evaluateAnswer } = require("../services/geminiService");
+const { 
+  generateQuestions, 
+  evaluateAnswer, 
+  extractSkillsFromResume 
+} = require("../services/geminiService");
 
 // @desc    Start a new interview
 // @route   POST /api/interview/start
 // @access  Private
 const startInterview = async (req, res) => {
   try {
-    const { role, country, experience } = req.body;
+    console.log("START_INTERVIEW: User ID: ", req.user?._id);
+    const { role, country, experience, resumeText } = req.body;
 
     if (!role || !country || experience === undefined) {
       return res.status(400).json({ message: "Please provide role, country, and experience" });
     }
 
-    // 1. Generate questions from Gemini
-    const questionsList = await generateQuestions(role, country, experience);
+    // 1. Extract skills if resume provided
+    let resumeSkills = "";
+    if (resumeText) {
+      resumeSkills = await extractSkillsFromResume(resumeText);
+      console.log("Extracted Skills:", resumeSkills);
+    }
+
+    // 2. Generate questions from Gemini
+    const questionsList = await generateQuestions(role, country, experience, resumeSkills);
 
     // 2. Format questions for our model
     const formattedQuestions = questionsList.map((q) => ({

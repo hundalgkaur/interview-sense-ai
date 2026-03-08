@@ -9,9 +9,9 @@ const config = require("../config");
 const genAI = new GoogleGenerativeAI(config.GEMINI_API_KEY, { apiVersion: "v1" });
 
 // @desc    Generate interview questions
-// @param   role, country, experience
+// @param   role, country, experience, resumeSkills
 // @return  Array of questions
-const generateQuestions = async (role, country, experience) => {
+const generateQuestions = async (role, country, experience, resumeSkills = "") => {
   try {
     if (!config.GEMINI_API_KEY || config.GEMINI_API_KEY.includes("your_")) {
        console.warn("Using Mock Questions: Gemini API Key is missing or placeholder.");
@@ -19,7 +19,7 @@ const generateQuestions = async (role, country, experience) => {
     }
 
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = generateQuestionsPrompt(role, country, experience);
+    const prompt = generateQuestionsPrompt(role, country, experience, resumeSkills);
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
@@ -35,6 +35,28 @@ const generateQuestions = async (role, country, experience) => {
         console.error("URGENT: Your GEMINI_API_KEY in .env is invalid. Using mock data instead.");
     }
     return getMockQuestions(role);
+  }
+};
+
+// @desc    Extract skills from resume text
+// @param   resumeText
+// @return  Comma separated skills
+const extractSkillsFromResume = async (resumeText) => {
+  try {
+    if (!config.GEMINI_API_KEY || config.GEMINI_API_KEY.includes("your_")) {
+       return "React, Node.js, JavaScript, MongoDB"; // Mock skills
+    }
+
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const prompt = `From the following resume text, identify and list only the most relevant technical skills as a comma-separated list. Limit to 10 skills. 
+    Resume Text: "${resumeText}"`;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    return response.text().trim();
+  } catch (error) {
+    console.error("Gemini API Error (Skills Extraction):", error.message);
+    return "React, Node.js, JavaScript, MongoDB";
   }
 };
 
@@ -64,11 +86,31 @@ const evaluateAnswer = async (question, answer, role, experience) => {
 
 // Helper for Mock Questions
 const getMockQuestions = (role) => [
-  { question: `What are the core responsibilities of a ${role}?` },
-  { question: `Can you describe a challenging project you worked on as a ${role}?` },
-  { question: `How do you stay updated with the latest trends in ${role} technologies?` },
-  { question: `Describe a time you had a conflict with a teammate and how you resolved it.` },
-  { question: `What is your approach to debugging complex issues?` }
+  { 
+    question: `What are the core responsibilities of a ${role}?`,
+    type: "theory",
+    initialCode: ""
+  },
+  { 
+    question: `Write a function to reverse a string in place. Example: "hello" -> "olleh"`,
+    type: "coding",
+    initialCode: "function reverseString(str) {\n  // Write your code here\n}"
+  },
+  { 
+    question: `How do you stay updated with the latest trends in ${role} technologies?`,
+    type: "theory",
+    initialCode: ""
+  },
+  { 
+    question: `Describe a time you had a conflict with a teammate and how you resolved it.`,
+    type: "theory",
+    initialCode: ""
+  },
+  { 
+    question: `Write a function to check if a number is prime.`,
+    type: "coding",
+    initialCode: "function isPrime(num) {\n  // Write your code here\n}"
+  }
 ];
 
 // Helper for Mock Evaluation
@@ -157,11 +199,13 @@ TEACHER'S ADVICE: ${advice}
   return {
     score,
     aiFeedback,
-    idealAnswer
+    idealAnswer,
+    followUp: ""
   };
 };
 
 module.exports = {
   generateQuestions,
   evaluateAnswer,
+  extractSkillsFromResume,
 };
