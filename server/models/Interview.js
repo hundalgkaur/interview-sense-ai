@@ -20,6 +20,11 @@ const interviewSchema = new mongoose.Schema({
     type: Number,
     required: [true, "Experience is required"],
   },
+  persona: {
+    type: String,
+    enum: ["standard", "bar-raiser", "startup", "mentor"],
+    default: "standard",
+  },
   questions: [
     {
       question: { type: String, required: true },

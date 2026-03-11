@@ -13,4 +13,16 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
+// Add a response interceptor to handle token expiration (401 errors)
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("userInfo");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default API;

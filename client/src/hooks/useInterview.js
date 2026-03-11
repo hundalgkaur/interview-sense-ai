@@ -18,7 +18,7 @@ const useInterview = () => {
     }
   };
 
-  const startNewInterview = async (role, country, experience, resumeText = "") => {
+  const startNewInterview = async (role, country, experience, resumeText = "", persona = "standard") => {
     try {
       setLoading(true);
       const { data } = await API.post("/interview/start", {
@@ -26,6 +26,7 @@ const useInterview = () => {
         country,
         experience,
         resumeText,
+        persona
       });
       return data;
     } catch (err) {
@@ -84,6 +85,19 @@ const useInterview = () => {
     }
   };
 
+  const deleteInterview = async (id) => {
+    try {
+      setLoading(true);
+      await API.delete(`/interview/${id}`);
+      setInterviews((prev) => prev.filter((i) => i._id !== id));
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to delete interview");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     interviews,
     loading,
@@ -93,6 +107,7 @@ const useInterview = () => {
     uploadResume,
     getInterviewDetails,
     submitInterviewAnswer,
+    deleteInterview,
   };
 };
 

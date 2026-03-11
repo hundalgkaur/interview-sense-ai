@@ -25,6 +25,13 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  currentStreak: {
+    type: Number,
+    default: 0,
+  },
+  lastAnsweredAt: {
+    type: Date,
+  },
 });
 
 // Hash password before saving

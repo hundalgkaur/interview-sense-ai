@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import API from "../services/api";
 
-const useAuth = () => {
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -53,7 +55,21 @@ const useAuth = () => {
     setUser(null);
   };
 
-  return { user, loading, error, login, signup, logout };
+  return (
+    <AuthContext.Provider value={{ user, loading, error, login, signup, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
+
+export const useAuthContext = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuthContext must be used within an AuthProvider");
+  }
+  return context;
+};
+
+const useAuth = () => useAuthContext();
 
 export default useAuth;

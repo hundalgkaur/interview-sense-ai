@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Interview Sense AI",
+  "version": "1.3",
+  "description": "Instantly start an AI mock interview based on the job posting you are currently viewing.",
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": ["https://www.linkedin.com/*", "https://*.indeed.com/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.svg"
+  },
+  "icons": {
+    "16": "icon.svg",
+    "48": "icon.svg",
+    "128": "icon.svg"
+  }
+}

@@ -1,10 +1,26 @@
-const generateQuestionsPrompt = (role, country, experience, resumeSkills = "") => {
+const getPersonaContext = (persona) => {
+  switch (persona) {
+    case "bar-raiser":
+      return "Tone: Aggressive and exacting. Focus heavily on Big-O complexity, edge cases, and high-scale architectural patterns. Ask brutal, deep-dive questions.";
+    case "startup":
+      return "Tone: Fast-paced and practical. Focus on product impact, shipping speed, trade-offs, and 'getting things done'. Value pragmatic solutions over academic perfection.";
+    case "mentor":
+      return "Tone: Encouraging and educational. Provide helpful context in your questions. If the candidate struggles, offer supportive and detailed feedback to help them learn.";
+    default:
+      return "Tone: Professional and standard. Follow industry-standard balanced interview protocols.";
+  }
+};
+
+const generateQuestionsPrompt = (role, country, experience, resumeSkills = "", persona = "standard") => {
   let resumeContext = "";
   if (resumeSkills) {
     resumeContext = `Specifically, tailor at least 3 questions to the following skills found in the user's resume: ${resumeSkills}. Focus on their practical application.`;
   }
 
-  return `Act as an expert technical interviewer. Generate 5 challenging interview questions for a ${role} position in ${country} with ${experience} years of experience.
+  const personaContext = getPersonaContext(persona);
+
+  return `Act as an expert technical interviewer. ${personaContext}
+  Generate 5 challenging interview questions for a ${role} position in ${country} with ${experience} years of experience.
   The questions should cover technical skills, problem-solving, and role-specific scenarios.
   
   IMPORTANT: 
@@ -33,10 +49,13 @@ const generateQuestionsPrompt = (role, country, experience, resumeSkills = "") =
   Do not include any other text in your response, only the JSON.`;
 };
 
-const evaluateAnswerPrompt = (question, answer, role, experience) => {
-  return `Act as a strict senior technical interviewer and teacher for a ${role} with ${experience} years of experience.
-  Evaluate the following response to the technical question: "${question}".
+const evaluateAnswerPrompt = (question, answer, role, experience, persona = "standard") => {
+  const personaContext = getPersonaContext(persona);
+
+  return `Act as a senior technical interviewer. ${personaContext} 
+  Evaluate the candidate's response for a ${role} position with ${experience} years of experience.
   
+  Question: "${question}"
   Candidate's Response: "${answer}"
   
   Critical Evaluation Criteria:
@@ -48,10 +67,10 @@ const evaluateAnswerPrompt = (question, answer, role, experience) => {
   Provide the "aiFeedback" in the following structured format:
   EXAMINER REPORT:
   ----------------
-  SUMMARY: [One sentence judgment]
+  SUMMARY: [One sentence judgment matching your persona tone]
   STRENGTHS: [What they did well]
   AREAS FOR IMPROVEMENT: [What was missing]
-  TEACHER'S ADVICE: [Practical tips for next time]
+  TEACHER'S ADVICE: [Practical tips matching your persona tone]
 
   Return the response in a JSON format with keys: "score", "aiFeedback", "idealAnswer", and "followUp".
   - "followUp": (string, OPTIONAL. If the answer is good but could be explored deeper, ask one short, specific follow-up question. Otherwise leave as empty string).

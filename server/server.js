@@ -1,11 +1,10 @@
 const interviewRoutes = require("./routes/interviewRoutes");
 const userRoutes = require("./routes/userRoutes");
+const questionRoutes = require("./routes/questionRoutes");
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
+const { errorHandler } = require("./middleware/errorMiddleware");
 const connectDB = require("./db");
-
-dotenv.config();
 
 // Connect to Database
 connectDB();
@@ -18,15 +17,15 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("InterviewSense AI Backend Running");
 });
-app.get("/test", (req, res) => {
-  res.send("API working");
-});
+
 app.use("/api/interview", interviewRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/questions", questionRoutes);
+
+// Centralized Error Handler
+app.use(errorHandler);
+
 const PORT = process.env.PORT || 5000;
-
-
-
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
